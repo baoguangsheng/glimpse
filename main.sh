@@ -27,7 +27,7 @@ for M in $source_models; do
   for D in $datasets; do
     for S in $scoring_models; do
       IFS=':' read -r -a S <<< $S && M1=${S[0]} && P=${S[1]}
-      echo `date`, Evaluating ExFast-DetectGPT on ${D}_${M}.${M1} with ${P} ...
+      echo `date`, Evaluating PDE on ${D}_${M}.${M1} with ${P} ...
       python scripts/probability_distribution_estimation.py --api_endpoint $api_endpoint --api_version $api_version \
                                 --api_key $api_key --scoring_model_name $M1 --prompt $P \
                                 --dataset $D --dataset_file $data_path/${D}_${M} --output_file $res_path/${D}_${M}.${M1}
