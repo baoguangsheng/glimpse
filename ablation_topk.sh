@@ -32,7 +32,7 @@ for K in 1 3 5 7 10; do
         # copy the evaluation raw files from the main results
         cp $exp_path/results/*_${M}.*.raw_data.json $res_path/. -rf
         for D in $datasets; do
-          echo `date`, Evaluating PDE (${estimator}) on ${D}_${M}.${M1} with top-${K} ...
+          echo `date`, "Evaluating PDE (${estimator}) on ${D}_${M}.${M1} with top-${K} ..."
           python scripts/probability_distribution_estimation.py --api_endpoint $api_endpoint --api_version $api_version \
                                     --api_key $api_key --scoring_model_name $M1 --prompt $P --top_k $K --estimator $estimator \
                                     --dataset $D --dataset_file $data_path/${D}_${M} --output_file $res_path/${D}_${M}.${M1}

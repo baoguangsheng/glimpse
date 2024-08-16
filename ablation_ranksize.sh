@@ -32,7 +32,7 @@ for V in 100 200 300 400 500 600 700 800 900 1000; do
         # copy the evaluation raw files from the main results
         cp $exp_path/results/*_${M}.*.raw_data.json $res_path/. -rf
         for D in $datasets; do
-          echo `date`, Evaluating PDE (${estimator}) on ${D}_${M}.${M1} with ranksize-${V} ...
+          echo `date`, "Evaluating PDE (${estimator}) on ${D}_${M}.${M1} with ranksize-${V} ..."
           python scripts/probability_distribution_estimation.py --api_endpoint $api_endpoint --api_version $api_version \
                                     --api_key $api_key --scoring_model_name $M1 --prompt $P --rank_size $V --estimator $estimator \
                                     --dataset $D --dataset_file $data_path/${D}_${M} --output_file $res_path/${D}_${M}.${M1}

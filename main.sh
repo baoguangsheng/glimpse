@@ -21,32 +21,14 @@ source_models="gpt-3.5-turbo gpt-4 claude-3-sonnet-20240229 claude-3-opus-202402
 api_endpoint="https://xxxx.openai.azure.com/"
 api_key="xxxxxxxx"
 api_version="2024-02-15-preview"
-
-# geometric
 scoring_models="babbage-002:prompt3 davinci-002:prompt3 gpt-35-turbo-1106:prompt3 gpt-4-1106:prompt4"
-estimator="geometric"
 
-for M in $source_models; do
-  for D in $datasets; do
-    for S in $scoring_models; do
-      IFS=':' read -r -a S <<< $S && M1=${S[0]} && P=${S[1]}
-      echo `date`, Evaluating PDE (${estimator}) on ${D}_${M}.${M1} with ${P} ...
-      python scripts/probability_distribution_estimation.py --api_endpoint $api_endpoint --api_version $api_version \
-                                --api_key $api_key --scoring_model_name $M1 --prompt $P --estimator $estimator \
-                                --dataset $D --dataset_file $data_path/${D}_${M} --output_file $res_path/${D}_${M}.${M1}
-    done
-  done
-done
-
-# zipfian and mlp
-scoring_models="gpt-35-turbo-1106:prompt3 gpt-4-1106:prompt4"
-
-for estimator in zipfian mlp; do
+for estimator in geometric zipfian mlp; do
   for M in $source_models; do
     for D in $datasets; do
       for S in $scoring_models; do
         IFS=':' read -r -a S <<< $S && M1=${S[0]} && P=${S[1]}
-        echo `date`, Evaluating PDE (${estimator}) on ${D}_${M}.${M1} with ${P} ...
+        echo `date`, "Evaluating PDE (${estimator}) on ${D}_${M}.${M1} with ${P} ..."
         python scripts/probability_distribution_estimation.py --api_endpoint $api_endpoint --api_version $api_version \
                                   --api_key $api_key --scoring_model_name $M1 --prompt $P --estimator $estimator \
                                   --dataset $D --dataset_file $data_path/${D}_${M} --output_file $res_path/${D}_${M}.${M1}
