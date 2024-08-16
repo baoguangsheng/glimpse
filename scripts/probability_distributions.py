@@ -115,7 +115,7 @@ class ZipfianDistribution:
         alpha, beta = self._find_alpha_beta(p_rest / p_K)
         assert p_rest >= 0, f'Error: Invalid p_rest={p_rest}'
         assert 0 <= alpha < 10, f'Error: Invalid alpha={alpha}'
-        assert 0 <= beta < 10, f'Error: Invalid beta={beta}'
+        assert 0 <= beta < 20, f'Error: Invalid beta={beta}'
         # estimate the probabilities of the rest tokens
         probs_rest = np.exp(safe_log(p_K) + alpha * safe_log(beta / (np.arange(1, M - K + 1) + beta)))
         probs = np.concatenate([probs, probs_rest])

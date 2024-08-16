@@ -28,7 +28,7 @@ for P in prompt0 prompt1 prompt2 prompt3 prompt4; do
   for M1 in $settings; do
     for M in $source_models; do
       for D in $datasets; do
-        echo `date`, Evaluating PDE on ${D}_${M}.${M1} with ${P} ...
+        echo `date`, Evaluating PDE (geometric) on ${D}_${M}.${M1} with ${P} ...
         python scripts/probability_distribution_estimation.py --api_endpoint $api_endpoint --api_version $api_version \
                                   --api_key $api_key --scoring_model_name $M1 --prompt $P \
                                   --dataset $D --dataset_file $data_path/${D}_${M} --output_file $res_path/${D}_${M}.${M1}
