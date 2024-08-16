@@ -1,97 +1,71 @@
 import random
-
+import argparse
+from tqdm import tqdm
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import numpy as np
 import nltk
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 from data_builder import load_data, save_data
 from model import from_pretrained
 
-class T5Paraphraser:
+class DipperParaphraser:
     def __init__(self, args):
+        self.args = args
         self.device = args.device
-        self.tokenizer = from_pretrained(AutoTokenizer, args.t5_model_name, {}, args.cache_dir)
-        self.model = from_pretrained(AutoModelForSeq2SeqLM, args.t5_model_name, {}, args.cache_dir)
+        self.tokenizer = from_pretrained(T5Tokenizer, 'google/t5-v1_1-xxl', {}, args.cache_dir)
+        self.model = from_pretrained(T5ForConditionalGeneration, args.model_name, {}, args.cache_dir)
         self.model = self.model.to(args.device)
         self.model.eval()
 
-    def paraphrase(self, sents):
-        parabatch = ["paraphrase: " + sent + " </s>" for sent in sents]
-        encoding = self.tokenizer(parabatch, padding=True, return_tensors="pt")
-        input_ids, attention_masks = encoding["input_ids"].to(self.device), encoding["attention_mask"].to(self.device)
-        outputs = self.model.generate(
-            input_ids=input_ids, attention_mask=attention_masks,
-            max_length=256,
-            do_sample=True,
-            top_k=200,
-            top_p=0.95,
-            early_stopping=True,
-            num_return_sequences=1
-        )
-        assert len(sents) == len(outputs)
-        results = []
-        for output, sent in zip(outputs, sents):
-            line = self.tokenizer.decode(output, skip_special_tokens=True, clean_up_tokenization_spaces=True)
-            line = line.strip()
-            line = line if len(line) > 0 else sent
-            results.append(line)
-        return results
+    def paraphrase(self, sample):
+        lex_code = int(100 - self.args.lex_diversity)
+        order_code = int(100 - self.args.order_diversity)
+        # remove spurious newlines
+        input_gen = sample
+        sentences = nltk.sent_tokenize(input_gen)
+        output_text = [sentences[0]]
+        for sent_idx in range(1, len(sentences), args.sent_interval):
+            prefix = output_text[-1]
+            curr_sent_window = " ".join(sentences[sent_idx:sent_idx + args.sent_interval])
+            final_input_text = f"lexical = {lex_code}, order = {order_code} {prefix} <sent> {curr_sent_window} </sent>"
 
-class RandomParaphraser:
-    def __init__(self, args):
-        self.device = args.device
-
-    def paraphrase(self, sents):
-        results = []
-        for sent in sents:
-            words = sent.split()
-            if len(words) > 20:
-                idx = random.randint(0, len(words) - 2)
-                words[idx], words[idx+1] = words[idx+1], words[idx]
-            results.append(' '.join(words))
-        return results
+            final_input = self.tokenizer([final_input_text], return_tensors="pt")
+            final_input = {k: v.cuda() for k, v in final_input.items()}
+            with torch.inference_mode():
+                outputs = self.model.generate(**final_input, do_sample=True, top_p=0.75, top_k=None, max_length=512)
+            outputs = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
+            output_text.append(outputs[0])
+        output_text = " ".join(output_text).strip()
+        return output_text
 
 def generate_data(args):
+
+    print(f'Loading model {args.model_name}...')
+    dipper = DipperParaphraser(args)
+
     data = load_data(args.dataset_file)
     originals = data['original']
     samples = data['sampled']
     print(f"Total number of samples: {len(samples)}")
     print(f"Average number of words: {np.mean([len(x.split()) for x in samples])}")
 
-    if args.do_random_para:
-        print(f'Using random paraphraser.')
-        paraphraser = RandomParaphraser(args)
-    else:
-        print(f'Loading model {args.t5_model_name}...')
-        paraphraser = T5Paraphraser(args)
-
     new_samples = []
     for sample in tqdm(samples):
-        lines = sample.split('\n')
-        new_lines = []
-        for line in lines:
-            line = line.strip()
-            if len(line) == 0:
-                new_lines.append(line)
-            else:
-                sents = nltk.sent_tokenize(line)
-                new_sents = paraphraser.paraphrase(sents)
-                new_lines.append(' '.join(new_sents))
-        new_samples.append('\n'.join(new_lines))
-
+        new_samples.append(dipper.paraphrase(sample))
     new_data = {'original': originals, 'sampled': new_samples}
     save_data(args.output_file, args, new_data)
 
 
 if __name__ == '__main__':
-    import argparse
-    from tqdm import tqdm
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('--output_file', type=str, default="./exp_test/results/xsum_gpt2")
+    parser.add_argument('--output_file', type=str, default="./exp_test/results/xsum_gpt2-xl")
     parser.add_argument('--dataset', type=str, default="xsum")
-    parser.add_argument('--dataset_file', type=str, default="./exp_test/data/xsum_gpt2")
-    parser.add_argument('--t5_model_name', type=str, default="Vamsi/T5_Paraphrase_Paws")
-    parser.add_argument('--paraphraser', type=str, default="t5", choices=["t5", "random"])
+    parser.add_argument('--dataset_file', type=str, default="./exp_test/data/xsum_gpt2-xl")
+    parser.add_argument('--model_name', type=str, default='kalpeshk2011/dipper-paraphraser-xxl')
+    parser.add_argument('--sent_interval', type=int, default=3)
+    parser.add_argument('--lex_diversity', type=int, default=60)
+    parser.add_argument('--order_diversity', type=int, default=0)
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--device', type=str, default="cuda")
     parser.add_argument('--cache_dir', type=str, default="../cache")
