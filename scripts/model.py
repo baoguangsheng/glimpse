@@ -13,7 +13,9 @@ def from_pretrained(cls, model_name, kwargs, cache_dir):
     local_path = os.path.join(cache_dir, 'local.' + model_name.replace("/", "_"))
     if os.path.exists(local_path):
         return cls.from_pretrained(local_path, **kwargs)
-    return cls.from_pretrained(model_name, **kwargs, cache_dir=cache_dir)
+    model = cls.from_pretrained(model_name, **kwargs, cache_dir=cache_dir)
+    model.save_pretrained(local_path)
+    return model
 
 # predefined models
 model_fullnames = {  'gpt2': 'gpt2',

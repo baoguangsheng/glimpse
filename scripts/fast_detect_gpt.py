@@ -97,26 +97,26 @@ def experiment(args):
         original_text = data["original"][idx]
         sampled_text = data["sampled"][idx]
         # original text
-        tokenized = scoring_tokenizer(original_text, return_tensors="pt", padding=True, return_token_type_ids=False).to(args.device)
+        tokenized = scoring_tokenizer(original_text, truncation=True, return_tensors="pt", padding=True, return_token_type_ids=False).to(args.device)
         labels = tokenized.input_ids[:, 1:]
         with torch.no_grad():
             logits_score = scoring_model(**tokenized).logits[:, :-1]
             if args.reference_model_name == args.scoring_model_name:
                 logits_ref = logits_score
             else:
-                tokenized = reference_tokenizer(original_text, return_tensors="pt", padding=True, return_token_type_ids=False).to(args.device)
+                tokenized = reference_tokenizer(original_text, truncation=True, return_tensors="pt", padding=True, return_token_type_ids=False).to(args.device)
                 assert torch.all(tokenized.input_ids[:, 1:] == labels), "Tokenizer is mismatch."
                 logits_ref = reference_model(**tokenized).logits[:, :-1]
             original_crit = criterion_fn(logits_ref, logits_score, labels)
         # sampled text
-        tokenized = scoring_tokenizer(sampled_text, return_tensors="pt", padding=True, return_token_type_ids=False).to(args.device)
+        tokenized = scoring_tokenizer(sampled_text, truncation=True, return_tensors="pt", padding=True, return_token_type_ids=False).to(args.device)
         labels = tokenized.input_ids[:, 1:]
         with torch.no_grad():
             logits_score = scoring_model(**tokenized).logits[:, :-1]
             if args.reference_model_name == args.scoring_model_name:
                 logits_ref = logits_score
             else:
-                tokenized = reference_tokenizer(sampled_text, return_tensors="pt", padding=True, return_token_type_ids=False).to(args.device)
+                tokenized = reference_tokenizer(sampled_text, truncation=True, return_tensors="pt", padding=True, return_token_type_ids=False).to(args.device)
                 assert torch.all(tokenized.input_ids[:, 1:] == labels), "Tokenizer is mismatch."
                 logits_ref = reference_model(**tokenized).logits[:, :-1]
             sampled_crit = criterion_fn(logits_ref, logits_score, labels)

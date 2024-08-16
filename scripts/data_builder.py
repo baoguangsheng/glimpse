@@ -17,10 +17,11 @@ from model import load_tokenizer, load_model
 
 def save_data(output_file, args, data):
     # write args to file
-    args_file = f"{output_file}.args.json"
-    with open(args_file, "w") as fout:
-        json.dump(args.__dict__, fout, indent=4)
-        print(f"Args written into {args_file}")
+    if args is not None:
+        args_file = f"{output_file}.args.json"
+        with open(args_file, "w") as fout:
+            json.dump(args.__dict__, fout, indent=4)
+            print(f"Args written into {args_file}")
 
     # write the data to a json file in the save folder
     data_file = f"{output_file}.raw_data.json"
@@ -70,7 +71,7 @@ class DataBuilder:
             response = openai.Completion.create(prompt=f"{prefix}", **kwargs)
             return prefix + response['choices'][0]['text']
 
-        elif self.args.openai_model in ['gpt-3.5-turbo', 'gpt-4']:
+        else:
             roles = {'xsum': 'You are a News writer.',
                      'writing': 'You are a Fiction writer.',
                      'pubmed': 'You are a Technical writer.'}
@@ -90,8 +91,6 @@ class DataBuilder:
                 return response
             return prefix + ' ' + response
 
-        else:
-            raise NotImplementedError
 
     # sample from base_model using ****only**** the first 30 tokens in each example as context
     def _sample_from_model(self, texts, min_words=55, prompt_tokens=30):
