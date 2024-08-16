@@ -61,7 +61,7 @@ class OpenAIGPT:
                 time.sleep(10)
                 nretry -= 1
 
-class ExBase:
+class PdeBase:
     def __init__(self, distrib):
         self.distrib = distrib
 
@@ -76,7 +76,7 @@ class ExBase:
         return np.array(probs)
 
 # Extension of Entropy
-class ExEntropy(ExBase):
+class PdeEntropy(PdeBase):
     def __call__(self, args, item):
         probs = self.estimate_distrib_sequence(item)
         lprobs = np.nan_to_num(np.log(probs))
@@ -84,7 +84,7 @@ class ExEntropy(ExBase):
         return np.mean(entropy)
 
 # Extension of Rank
-class ExRank(ExBase):
+class PdeRank(PdeBase):
     def __call__(self, args, item):
         logprobs = item["logprobs"]
         probs = self.estimate_distrib_sequence(item)
@@ -99,7 +99,7 @@ class ExRank(ExBase):
         return -np.mean(ranks)
 
 # Extension of Log-Rank
-class ExLogRank(ExBase):
+class PdeLogRank(PdeBase):
     def __call__(self, args, item):
         logprobs = item["logprobs"]
         probs = self.estimate_distrib_sequence(item)
@@ -114,7 +114,7 @@ class ExLogRank(ExBase):
         return -np.mean(logranks)
 
 # Extension of Fast-DetectGPT
-class ExFastDetectGPT(ExBase):
+class PdeFastDetectGPT(PdeBase):
     def __call__(self, args, item):
         logprobs = item["logprobs"]
         probs = self.estimate_distrib_sequence(item)
@@ -187,10 +187,10 @@ def experiment(args):
     distrib = estimators[estimator]
     criterion_fns = {
         "likelihood": get_likelihood,
-        f"pde_entropy_{estimator}": ExEntropy(distrib),
-        f"pde_rank_{estimator}": ExRank(distrib),
-        f"pde_logrank_{estimator}": ExLogRank(distrib),
-        f"pde_fastdetect_{estimator}": ExFastDetectGPT(distrib),
+        f"pde_entropy_{estimator}": PdeEntropy(distrib),
+        f"pde_rank_{estimator}": PdeRank(distrib),
+        f"pde_logrank_{estimator}": PdeLogRank(distrib),
+        f"pde_fastdetect_{estimator}": PdeFastDetectGPT(distrib),
     }
     # Calculate the criteria
     n_samples = len(data)
