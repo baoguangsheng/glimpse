@@ -36,7 +36,7 @@ if __name__ == '__main__':
         with open(res_file, 'r') as fin:
             res = json.load(fin)
         if 'metrics' in res:
-            n_samples = res['info']['n_samples']
+            n_samples = len(res['raw_results'])
             roc_auc = res['metrics']['roc_auc']
             real = res['predictions']['real']
             samples = res['predictions']['samples']
