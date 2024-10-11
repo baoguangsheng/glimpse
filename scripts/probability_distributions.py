@@ -51,15 +51,15 @@ class GeometricDistribution:
                     _lambda = _lambda0
                     break
                 last_diff = diff
-            print(f'Warnining: Invalid lambda={_lambda_old}, re-calculate lambda={_lambda}')
+            # print(f'Warnining: Invalid lambda={_lambda_old}, re-calculate lambda={_lambda}')
         assert p_rest >= 0, f'Error: Invalid p_rest={p_rest}'
         assert 0 <= _lambda <= 1, f'Error: Invalid lambda={_lambda} calculated by p_K={p_K} and p_rest={p_rest}.'
         # estimate the probabilities of the rest tokens
         probs_rest = np.exp(safe_log(p_K) + np.arange(1, M - K + 1) * safe_log(_lambda))
         probs = np.concatenate([probs, probs_rest])
         # check total probability
-        if abs(probs.sum() - 1.0) >= 1e-2:
-            print(f'Warnining: Invalid total probability: {probs.sum()}')
+        # if abs(probs.sum() - 1.0) >= 1e-2:
+            # print(f'Warnining: Invalid total probability: {probs.sum()}')
         probs = probs / probs.sum()
         return probs.tolist()
 
@@ -120,8 +120,8 @@ class ZipfianDistribution:
         probs_rest = np.exp(safe_log(p_K) + alpha * safe_log(beta / (np.arange(1, M - K + 1) + beta)))
         probs = np.concatenate([probs, probs_rest])
         # check total probability
-        if abs(probs.sum() - 1.0) >= 1e-2:
-            print(f'Warnining: Invalid total probability: {probs.sum()}')
+        # if abs(probs.sum() - 1.0) >= 1e-2:
+        #     print(f'Warnining: Invalid total probability: {probs.sum()}')
         probs = probs / probs.sum()
         return probs.tolist()
 
