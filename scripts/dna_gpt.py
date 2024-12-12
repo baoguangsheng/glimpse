@@ -26,7 +26,7 @@ class PrefixSampler:
                 api_version=args.api_version)
         else:
             from model import load_tokenizer, load_model
-            self.base_tokenizer = load_tokenizer(args.base_model_name, args.dataset, args.cache_dir)
+            self.base_tokenizer = load_tokenizer(args.base_model_name, args.cache_dir)
             self.base_model = load_model(args.base_model_name, args.device, args.cache_dir)
 
     def is_blackbox(self):

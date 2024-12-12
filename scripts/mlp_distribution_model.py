@@ -139,7 +139,7 @@ def get_distrib_data(args):
     # eval
     distribs = []
     for dataset in datasets:
-        scoring_tokenizer = load_tokenizer(args.scoring_model_name, dataset, args.cache_dir)
+        scoring_tokenizer = load_tokenizer(args.scoring_model_name, args.cache_dir)
         for source in sources:
             dataset_file = os.path.join(args.dataset_path, f'{dataset}_{source}')
             data = load_data(dataset_file)

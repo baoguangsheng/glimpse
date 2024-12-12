@@ -19,7 +19,7 @@ class OpenLLM:
     def __init__(self, args):
         self.args = args
         self.max_topk = args.max_topk
-        self.tokenizer = load_tokenizer(args.scoring_model_name, args.dataset, args.cache_dir)
+        self.tokenizer = load_tokenizer(args.scoring_model_name, args.cache_dir)
         self.model = load_model(args.scoring_model_name, args.device, args.cache_dir)
         self.model.eval()
 

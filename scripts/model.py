@@ -20,19 +20,14 @@ def from_pretrained(cls, model_name, kwargs, cache_dir):
 # predefined models
 model_fullnames = {  'gpt2': 'gpt2',
                      'gpt2-xl': 'gpt2-xl',
-                     'opt-2.7b': 'facebook/opt-2.7b',
                      'gpt-neo-2.7B': 'EleutherAI/gpt-neo-2.7B',
                      'gpt-j-6B': 'EleutherAI/gpt-j-6B',
                      'gpt-neox-20b': 'EleutherAI/gpt-neox-20b',
-                     'mgpt': 'sberbank-ai/mGPT',
-                     'pubmedgpt': 'stanford-crfm/pubmedgpt',
-                     'mt5-xl': 'google/mt5-xl',
-                     'llama-13b': 'huggyllama/llama-13b',
-                     'llama2-13b': 'TheBloke/Llama-2-13B-fp16',
-                     'bloom-7b1': 'bigscience/bloom-7b1',
-                     'opt-13b': 'facebook/opt-13b',
+                     'phi-2': 'microsoft/phi-2',
+                     'qwen2.5-7b' : 'Qwen/Qwen2.5-7B',
+                     'llama3-8b': 'Llama-3-8B',
                      }
-float16_models = ['gpt-j-6B', 'gpt-neox-20b', 'llama-13b', 'llama2-13b', 'bloom-7b1', 'opt-13b']
+float16_models = ['gpt-j-6B', 'gpt-neox-20b', 'qwen2.5-7b', 'llama3-8b']
 
 def get_model_fullname(model_name):
     return model_fullnames[model_name] if model_name in model_fullnames else model_name
@@ -52,16 +47,13 @@ def load_model(model_name, device, cache_dir):
     print(f'DONE ({time.time() - start:.2f}s)')
     return model
 
-def load_tokenizer(model_name, for_dataset, cache_dir):
+def load_tokenizer(model_name, cache_dir):
     model_fullname = get_model_fullname(model_name)
     optional_tok_kwargs = {}
+    optional_tok_kwargs['padding_side'] = 'right'
     if "facebook/opt-" in model_fullname:
         print("Using non-fast tokenizer for OPT")
         optional_tok_kwargs['fast'] = False
-    if for_dataset in ['pubmed']:
-        optional_tok_kwargs['padding_side'] = 'left'
-    else:
-        optional_tok_kwargs['padding_side'] = 'right'
     base_tokenizer = from_pretrained(AutoTokenizer, model_fullname, optional_tok_kwargs, cache_dir=cache_dir)
     if base_tokenizer.pad_token_id is None:
         base_tokenizer.pad_token_id = base_tokenizer.eos_token_id
