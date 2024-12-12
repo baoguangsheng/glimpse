@@ -6,6 +6,7 @@ import os.path
 import argparse
 import json
 import numpy as np
+from metrics import get_roc_metrics
 
 dataset_names = {'xsum': 'XSum',
                  'writing': 'Writing',
@@ -35,11 +36,19 @@ model_names = {'gpt-3.5-turbo': 'ChatGPT',
                'babbage-002': 'Babbage',
                'davinci-002': 'Davinci',
                't5-11b_gpt-neo-2.7B': 'T5-11B/Neo-2.7',
-               'gpt-j-6B_gpt-neo-2.7B': 'GPT-J/Neo-2.7',}
+               'gpt-j-6B_gpt-neo-2.7B': 'GPT-J/Neo-2.7',
+               'gpt-neo-2.7B_gpt-neo-2.7B': 'Neo-2.7',
+               'phi-2_phi-2': 'Phi2-2.7B',
+               'llama3-8b_llama3-8b': 'Llama3-8B',
+               'qwen2.5-7b_qwen2.5-7b': 'Qwen2.5-7B',
+               'gpt-neox-20b_gpt-neox-20b': 'gpt-neox-20B',
+               'phi-2': 'Phi2-2.7B',
+               'llama3-8b': 'Llama3-8B',
+               'qwen2.5-7b': 'Qwen2.5-7B',
+               'gpt-neox-20b': 'gpt-neox-20B',
+               }
 
-method_names = {'roberta-base-openai-detector': 'RoBERTa-base',
-                'roberta-large-openai-detector': 'RoBERTa-large',
-                'gptzero': 'GPTZero',
+method_names = {'gptzero': 'GPTZero',
                 'likelihood': 'Likelihood',
                 'entropy': 'Entropy',
                 'rank': 'Rank',
@@ -78,6 +87,18 @@ def get_fpr_tpr(result_file):
         res = json.load(fin)
         return res['metrics']['fpr'], res['metrics']['tpr']
 
+def get_resultfiles(result_path, method, scoring_model, source_models, datasets):
+    result_files = []
+    for source_model in source_models:
+        for dataset in datasets:
+            if scoring_model is None:
+                result_file = f'{result_path}/{dataset}_{source_model}.{method}.json'
+            else:
+                result_file = f'{result_path}/{dataset}_{source_model}.{scoring_model}.{method}.json'
+            if os.path.exists(result_file):
+                result_files.append(result_file)
+    return result_files
+
 def get_auroc_of_dataset(result_path, method, source_model, scoring_model, dataset):
     if scoring_model is None:
         result_file = f'{result_path}/{dataset}_{source_model}.{method}.json'
@@ -89,10 +110,48 @@ def get_auroc_of_dataset(result_path, method, source_model, scoring_model, datas
         auroc = 0.0
     return auroc
 
+def get_auroc_of_mixture(result_files):
+    real = []
+    samples = []
+    for result_file in result_files:
+        with open(result_file, 'r') as fin:
+            res = json.load(fin)
+            real.extend(res['predictions']['real'])
+            samples.extend(res['predictions']['samples'])
+    # get auroc
+    if len(real) > 0 and len(samples) > 0:
+        fpr, tpr, roc_auc = get_roc_metrics(real, samples)
+        return roc_auc
+    else:
+        return 0.0
+
 def get_auroc_of_datasets(result_path, method, source_model, scoring_model, datasets):
     cols = []
     for dataset in datasets:
         cols.append(get_auroc_of_dataset(result_path, method, source_model, scoring_model, dataset))
+    # calculate mixture of the datasets
+    auroc = get_auroc_of_mixture(get_resultfiles(result_path, method, scoring_model, [source_model], datasets))
+    cols.append(auroc)
+    return cols
+
+def get_tpr_of_dataset(result_path, method, source_model, scoring_model, dataset):
+    fpr_fix = 0.01
+    if scoring_model is None:
+        result_file = f'{result_path}/{dataset}_{source_model}.{method}.json'
+    else:
+        result_file = f'{result_path}/{dataset}_{source_model}.{scoring_model}.{method}.json'
+    if os.path.exists(result_file):
+        fprs, tprs = get_fpr_tpr(result_file)
+        for fpr, tpr in zip(fprs, tprs):
+            if fpr >= fpr_fix:
+                return tpr
+    else:
+        return 0.0
+
+def get_tpr_of_datasets(result_path, method, source_model, scoring_model, datasets):
+    cols = []
+    for dataset in datasets:
+        cols.append(get_tpr_of_dataset(result_path, method, source_model, scoring_model, dataset))
     cols.append(np.mean(cols))
     return cols
 
@@ -211,7 +270,6 @@ def get_results_auroc_curve(args):
             results = load_experiment(json_file)
             real.extend(results['predictions']['real'])
             samples.extend(results['predictions']['samples'])
-        from metrics import get_roc_metrics
         fpr, tpr, roc_auc = get_roc_metrics(real, samples)
         return fpr, tpr
 
@@ -249,8 +307,6 @@ def report_main_results(args, type):
 
     section_methods = {
         'Trained Detectors and Commercial Systems': [
-            ('roberta-base-openai-detector', None),
-            ('roberta-large-openai-detector', None),
             ('gptzero', None)],
         'Zero-Shot Detectors Using Open-Source LLMs': [
             ('likelihood', 'gpt-neo-2.7B'),
@@ -259,7 +315,11 @@ def report_main_results(args, type):
             ('logrank', 'gpt-neo-2.7B'),
             ('dna_gpt', 'gpt-neo-2.7B'),
             ('perturbation_100', 't5-11b_gpt-neo-2.7B'),
-            ('sampling_discrepancy_analytic', 'gpt-j-6B_gpt-neo-2.7B')],
+            ('sampling_discrepancy_analytic', 'gpt-j-6B_gpt-neo-2.7B'),
+            ('sampling_discrepancy_analytic', 'phi-2_phi-2'),
+            ('sampling_discrepancy_analytic', 'qwen2.5-7b_qwen2.5-7b'),
+            ('sampling_discrepancy_analytic', 'llama3-8b_llama3-8b'),
+        ],
         'Zero-Shot Detectors Using Proprietary LLMs': [
             ('likelihood', 'gpt-35-turbo-1106'),
             ('dna_gpt', 'gpt-35-turbo-1106')],
@@ -272,13 +332,9 @@ def report_main_results(args, type):
             (f'pde_fastdetect_geometric', 'gpt-35-turbo-1106'),
             (f'pde_fastdetect_geometric', 'gpt-4-1106')],
         'PDE using Zipfian': [
-            # (f'pde_fastdetect_zipfian', 'babbage-002'),
-            # (f'pde_fastdetect_zipfian', 'davinci-002'),
             (f'pde_fastdetect_zipfian', 'gpt-35-turbo-1106'),
             (f'pde_fastdetect_zipfian', 'gpt-4-1106')],
         'PDE using MLP': [
-            # (f'pde_fastdetect_mlp', 'babbage-002'),
-            # (f'pde_fastdetect_mlp', 'davinci-002'),
             (f'pde_fastdetect_mlp', 'gpt-35-turbo-1106'),
             (f'pde_fastdetect_mlp', 'gpt-4-1106')],
     }
@@ -303,30 +359,19 @@ def report_main_results(args, type):
             cols = [f'{col:.4f}' if col != 0 else '-' for col in cols]
             print(f'{method_name}{model_name}', '&', ' & '.join(cols), '\\\\')
 
-
-
 def report_langs_results(args):
-    estimator = 'geometric'
     datasets = ['chinese', 'russian', 'urdu', 'indonesian', 'arabic', 'bulgarian']
     source_model = 'chatgpt'
     section_methods = {
         'Existing Methods': [
-            ('roberta-base-openai-detector', None),
-            ('roberta-large-openai-detector', None),
             ('sampling_discrepancy_analytic', 'gpt-j-6B_gpt-neo-2.7B'),
-            ('likelihood', 'gpt-35-turbo-1106')],
+            ('sampling_discrepancy_analytic', 'phi-2_phi-2'),
+            ('sampling_discrepancy_analytic', 'qwen2.5-7b_qwen2.5-7b'),
+            ('sampling_discrepancy_analytic', 'llama3-8b_llama3-8b')],
         'PDE using Geometric': [
             (f'pde_fastdetect_geometric', 'babbage-002'),
             (f'pde_fastdetect_geometric', 'davinci-002'),
             (f'pde_fastdetect_geometric', 'gpt-35-turbo-1106')],
-        'PDE using Zipfian': [
-            (f'pde_fastdetect_zipfian', 'babbage-002'),
-            (f'pde_fastdetect_zipfian', 'davinci-002'),
-            (f'pde_fastdetect_zipfian', 'gpt-35-turbo-1106')],
-        'PDE using MLP': [
-            (f'pde_fastdetect_mlp', 'babbage-002'),
-            (f'pde_fastdetect_mlp', 'davinci-002'),
-            (f'pde_fastdetect_mlp', 'gpt-35-turbo-1106')],
     }
 
     for section, methods in section_methods.items():
@@ -352,23 +397,15 @@ def report_attack_results(args):
 
     section_methods = {
         'Baselines': [
-            ('roberta-base-openai-detector', None),
-            ('roberta-large-openai-detector', None),
             ('sampling_discrepancy_analytic', 'gpt-j-6B_gpt-neo-2.7B'),
+            ('sampling_discrepancy_analytic', 'phi-2_phi-2'),
+            ('sampling_discrepancy_analytic', 'qwen2.5-7b_qwen2.5-7b'),
+            ('sampling_discrepancy_analytic', 'llama3-8b_llama3-8b'),
             ('likelihood', 'gpt-35-turbo-1106')],
         'PDE using Geometric': [
             (f'pde_fastdetect_geometric', 'babbage-002'),
             (f'pde_fastdetect_geometric', 'davinci-002'),
-            (f'pde_fastdetect_geometric', 'gpt-35-turbo-1106'),
-            (f'pde_entropy_geometric', 'gpt-35-turbo-1106')],
-        'PDE using Zipfian': [
-            (f'pde_fastdetect_zipfian', 'babbage-002'),
-            (f'pde_fastdetect_zipfian', 'davinci-002'),
-            (f'pde_fastdetect_zipfian', 'gpt-35-turbo-1106')],
-        'PDE using MLP': [
-            (f'pde_fastdetect_mlp', 'babbage-002'),
-            (f'pde_fastdetect_mlp', 'davinci-002'),
-            (f'pde_fastdetect_mlp', 'gpt-35-turbo-1106')],
+            (f'pde_fastdetect_geometric', 'gpt-35-turbo-1106')]
     }
 
     for section, methods in section_methods.items():
@@ -378,18 +415,16 @@ def report_attack_results(args):
             model_name = '' if scoring_model is None else f' ({model_names[scoring_model]})'
             cols = []
             avgs = []
-            for idx, source_model in enumerate(source_models):
-                ss = get_auroc_of_datasets(args.result_path, method, source_model, scoring_model, datasets)
-                if idx == 0 or len(source_models) <= 2:
-                    cols.extend(ss)
-                    avgs.append(ss[-1])
-                else:
-                    cols.append(ss[-1])
-                    avgs.append(ss[-1])
+            for source_model in source_models:
+                ss = get_tpr_of_datasets(args.result_path, method, source_model, scoring_model, datasets)
+                cols.extend(ss)
+                avgs.append(ss[-1])
+
             if len(avgs) > 2:
                 cols.append(np.mean(avgs))
-            cols = [f'{col:.4f}' if col != 0 else '-' for col in cols]
+            cols = [f'{col*100:.1f}' if col != 0 else '-' for col in cols]
             print(f'{method_name}{model_name}', '&', ' & '.join(cols), '\\\\')
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
