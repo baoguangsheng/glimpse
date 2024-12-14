@@ -16,7 +16,7 @@
     <th class="tg-0pky">Avg.</th>
   </tr>
   <tr>
-    <td class="tg-0pky">Fast-DetectGPT<br/>(Open-Source: GPT-Neo-2.7B)</td>
+    <td class="tg-0pky">Fast-DetectGPT<br/>(Open-Source: gpt-neo-2.7b)</td>
     <td class="tg-0pky">0.9487</td>
     <td class="tg-0pky">0.8999</td>
     <td class="tg-0pky">0.9260</td>
@@ -25,7 +25,7 @@
     <td class="tg-0pky">0.9057</td>
   </tr>
   <tr>
-    <td class="tg-0pky">PDE (Fast-DetectGPT)<br/>(Proprietary: GPT-3.5)</td>
+    <td class="tg-0pky">PDE (Fast-DetectGPT)<br/>(Proprietary: gpt-3.5)</td>
     <td class="tg-0pky"><b>0.9766</b><br/>(<b>↑54%</b>)</td>
     <td class="tg-0pky"><b>0.9411</b><br/>(<b>↑41%</b>)</td>
     <td class="tg-0pky"><b>0.9576</b><br/>(<b>↑43%</b>)</td>
@@ -34,8 +34,7 @@
     <td class="tg-0pky"><b>0.9537</b><br/>(<b>↑51%</b>)</td>
   </tr>
 </table>
-The table shows detection accuracy (measured in AUROC) across five latest LLMs, where the baseline Fast-DetectGPT uses an open-source model but our PDE (Fast-DetectGPT) uses a proprietary model. The methods are evaluated on the diverse dataset Mix3 (a mixture of XSum, Writing, and PubMed). The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
-      
+The table shows detection accuracy (measured in AUROC) across five source LLMs, where the methods are evaluated on a diverse dataset Mix3 (a mixture of XSum, Writing, and PubMed). The baseline Fast-DetectGPT uses an open-source gpt-neo-2.7b model but our PDE (Fast-DetectGPT) uses a proprietary gpt-3.5 model. The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".     
       
 
 ## Environment
