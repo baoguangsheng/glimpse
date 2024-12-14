@@ -34,8 +34,7 @@
     <td class="tg-0pky"><b>0.9537</b><br/>(<b>↑51%</b>)</td>
   </tr>
 </table>
-The table shows detection accuracy (measured in AUROC) across five source LLMs, where the methods are evaluated on a diverse dataset Mix3 (a mixture of XSum, Writing, and PubMed). The baseline Fast-DetectGPT uses an open-source gpt-neo-2.7b model but our PDE (Fast-DetectGPT) uses a proprietary gpt-3.5 model. The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".     
-      
+The table shows detection accuracy (measured in AUROC) across five source LLMs, where the methods are evaluated on a diverse dataset Mix3 (a mixture of XSum, Writing, and PubMed) produced by each source model. The baseline Fast-DetectGPT uses an open-source gpt-neo-2.7b model but our PDE (Fast-DetectGPT) uses a proprietary gpt-3.5 model. The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
 
 ## Environment
 * Python3.12
