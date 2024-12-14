@@ -301,7 +301,7 @@ def report_main_results(args, type):
         source_models = ['claude-3-sonnet-20240229', 'claude-3-opus-20240229']
 
     headers1 = ['--'] + [model_names[model] for model in source_models]
-    headers2 = ['Method'] + [dataset_names[dataset] for dataset in datasets] + ['Avg.']
+    headers2 = ['Method'] + [dataset_names[dataset] for dataset in datasets] + ['Mix3']
     print(' '.join(headers1))
     print(' '.join(headers2))
 
@@ -380,6 +380,7 @@ def report_langs_results(args):
             method_name = method_names[method]
             model_name = '' if scoring_model is None else f' ({model_names[scoring_model]})'
             cols = []
+            # ss[-1] is the result for Mix6, which is a mixture of the six languages
             ss = get_auroc_of_datasets(args.result_path, method, source_model, scoring_model, datasets)
             cols.extend(ss)
             cols = [f'{col:.4f}' if col != 0 else '-' for col in cols]

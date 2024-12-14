@@ -1,8 +1,7 @@
 # Probability Distribution Estimation (PDE)
-**This code is for our paper "White-Box Text Detectors Using Proprietary LLMs: A Probability Distribution Estimation Approach"**, where we borrow or extend some code from [Fast-DetectGPT](https://github.com/baoguangsheng/fast-detect-gpt).
+**This code is for our paper "PDE: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection"**, where we borrow some code from [Fast-DetectGPT](https://github.com/baoguangsheng/fast-detect-gpt).
 
-[Paper]() 
-| [OnlineDemo]()
+[Paper]()
 
 
 ## Brief Intro
@@ -18,24 +17,24 @@
   </tr>
   <tr>
     <td class="tg-0pky">Fast-DetectGPT<br/>(Open-Source: GPT-Neo-2.7B)</td>
-    <td class="tg-0pky">0.9615</td>
-    <td class="tg-0pky">0.9061</td>
-    <td class="tg-0pky">0.9304</td>
-    <td class="tg-0pky">0.9519</td>
-    <td class="tg-0pky">0.8099</td>
-    <td class="tg-0pky">0.9119</td>
+    <td class="tg-0pky">0.9487</td>
+    <td class="tg-0pky">0.8999</td>
+    <td class="tg-0pky">0.9260</td>
+    <td class="tg-0pky">0.9468</td>
+    <td class="tg-0pky">0.8072</td>
+    <td class="tg-0pky">0.9057</td>
   </tr>
   <tr>
     <td class="tg-0pky">PDE (Fast-DetectGPT)<br/>(Proprietary: GPT-3.5)</td>
-    <td class="tg-0pky"><b>0.9827</b><br/>(<b>↑55%</b>)</td>
-    <td class="tg-0pky"><b>0.9486</b><br/>(<b>↑45%</b>)</td>
-    <td class="tg-0pky"><b>0.9638</b><br/>(<b>↑48%</b>)</td>
-    <td class="tg-0pky"><b>0.9805</b><br/>(<b>↑59%</b>)</td>
-    <td class="tg-0pky"><b>0.9391</b><br/>(<b>↑68%</b>)</td>
-    <td class="tg-0pky"><b>0.9630</b><br/>(<b>↑58%</b>)</td>
+    <td class="tg-0pky"><b>0.9766</b><br/>(<b>↑54%</b>)</td>
+    <td class="tg-0pky"><b>0.9411</b><br/>(<b>↑41%</b>)</td>
+    <td class="tg-0pky"><b>0.9576</b><br/>(<b>↑43%</b>)</td>
+    <td class="tg-0pky"><b>0.9689</b><br/>(<b>↑42%</b>)</td>
+    <td class="tg-0pky"><b>0.9244</b><br/>(<b>↑61%</b>)</td>
+    <td class="tg-0pky"><b>0.9537</b><br/>(<b>↑51%</b>)</td>
   </tr>
 </table>
-The table shows detection accuracy (measured in AUROC) across five latest LLMs, where the baseline Fast-DetectGPT uses an open-source model but our PDE (Fast-DetectGPT) uses a proprietary model. The scores are averaged across the three datasets in the main results, and the notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
+The table shows detection accuracy (measured in AUROC) across five latest LLMs, where the baseline Fast-DetectGPT uses an open-source model but our PDE (Fast-DetectGPT) uses a proprietary model. The methods are evaluated on the diverse dataset Mix3 (a mixture of XSum, Writing, and PubMed). The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
       
       
 
@@ -57,8 +56,8 @@ Following folders are created for our experiments:
 ### Citation
 If you find this work useful, you can cite it with the following BibTex entry:
 
-    @articles{bao2024white,
-      title={White-Box Text Detectors Using Proprietary LLMs: A Probability Distribution Estimation Approach},
+    @articles{bao2024pde,
+      title={PDE: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection},
       author={Bao, Guangsheng and Zhao, Yanbin and He, Juncai and Zhang, Yue},
       year={2024}
     }
