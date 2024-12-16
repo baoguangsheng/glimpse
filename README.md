@@ -25,7 +25,7 @@
     <td class="tg-0pky">0.9057</td>
   </tr>
   <tr>
-    <td class="tg-0pky">PDE (Fast-DetectGPT)<br/>(Proprietary: gpt-3.5)</td>
+    <td class="tg-0pky">Glimpse (Fast-DetectGPT)<br/>(Proprietary: gpt-3.5)</td>
     <td class="tg-0pky"><b>0.9766</b><br/>(<b>↑54%</b>)</td>
     <td class="tg-0pky"><b>0.9411</b><br/>(<b>↑41%</b>)</td>
     <td class="tg-0pky"><b>0.9576</b><br/>(<b>↑43%</b>)</td>
@@ -34,7 +34,7 @@
     <td class="tg-0pky"><b>0.9537</b><br/>(<b>↑51%</b>)</td>
   </tr>
 </table>
-The table shows detection accuracy (measured in AUROC) across five source LLMs, where the methods are evaluated on a diverse dataset Mix3 (a mixture of XSum, Writing, and PubMed) produced by each source model. The baseline Fast-DetectGPT uses an open-source gpt-neo-2.7b model but our PDE (Fast-DetectGPT) uses a proprietary gpt-3.5 model. The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
+The table shows detection accuracy (measured in AUROC) across five source LLMs, where the methods are evaluated on a diverse dataset Mix3 (a mixture of XSum, Writing, and PubMed) produced by each source model. The baseline Fast-DetectGPT uses an open-source gpt-neo-2.7b model but our Glimpse (Fast-DetectGPT) uses a proprietary gpt-3.5 model. The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
 
 ## Environment
 * Python3.12
@@ -42,7 +42,7 @@ The table shows detection accuracy (measured in AUROC) across five source LLMs, 
 * Setup the environment:
   ```pip install -r requirements.txt```
   
-(Notes: the baseline methods are run on 1 GPU of Tesla A100 with 80G memory, while PDE is run on a CPU environment.)
+(Notes: the baseline methods are run on 1 GPU of Tesla A100 with 80G memory, while Glimpse is run on a CPU environment.)
 
 ## Workspace
 Following folders are created for our experiments:
