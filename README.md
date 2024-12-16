@@ -1,5 +1,5 @@
-# Probability Distribution Estimation (PDE)
-**This code is for our paper "PDE: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection"**, where we borrow some code from [Fast-DetectGPT](https://github.com/baoguangsheng/fast-detect-gpt).
+# Glimpse: A Probability Distribution Estimation Approach
+**This code is for our paper "Glimpse: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection"**, where we borrow some code from [Fast-DetectGPT](https://github.com/baoguangsheng/fast-detect-gpt).
 
 [Paper]()
 
@@ -54,8 +54,8 @@ Following folders are created for our experiments:
 ### Citation
 If you find this work useful, you can cite it with the following BibTex entry:
 
-    @articles{bao2024pde,
-      title={PDE: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection},
+    @articles{bao2024glimpse,
+      title={Glimpse: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection},
       author={Bao, Guangsheng and Zhao, Yanbin and He, Juncai and Zhang, Yue},
       year={2024}
     }
