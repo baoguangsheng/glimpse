@@ -31,7 +31,7 @@ class GeometricDistribution:
         toplogprobs = toplogprobs[:K]
         probs = np.exp(toplogprobs)  # distribution over ranks
         if probs.sum() > 1.0:
-            print(f'Warnining: Probability {probs.sum()} excels 1.0')
+            # print(f'Warnining: Probability {probs.sum()} excels 1.0')
             probs = probs / (probs.sum() + 1e-6)
         p_K = probs[-1]  # the k-th top token
         p_rest = 1 - probs.sum()  # the rest probability mass
@@ -108,7 +108,7 @@ class ZipfianDistribution:
         toplogprobs = toplogprobs[:K]
         probs = np.exp(toplogprobs)  # distribution over ranks
         if probs.sum() > 1.0:
-            print(f'Warnining: Probability {probs.sum()} excels 1.0')
+            # print(f'Warnining: Probability {probs.sum()} excels 1.0')
             probs = probs / (probs.sum() + 1e-6)
         p_K = probs[-1]  # the k-th top token
         p_rest = 1 - probs.sum()  # the rest probability mass
