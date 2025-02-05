@@ -1,8 +1,9 @@
 # Glimpse
-**This code is for our paper "Glimpse: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection"**, where we borrow some code from [Fast-DetectGPT](https://github.com/baoguangsheng/fast-detect-gpt).
+**This code is for our ICLR 2025 paper "Glimpse: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection"**, where we borrow some code from [Fast-DetectGPT](https://github.com/baoguangsheng/fast-detect-gpt).
 
 [Paper](https://arxiv.org/abs/2412.11506)
 | [Demo](#demo)
+| [OpenReview](https://openreview.net/forum?id=an3fugFA23)
 
 We are working on the demo and will update the link soon.
 
