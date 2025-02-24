@@ -16,12 +16,11 @@ from probability_distributions import GeometricDistribution, ZipfianDistribution
 
 class OpenAIGPT:
     def __init__(self, args):
-        from openai import AzureOpenAI
         self.args = args
-        self.client = AzureOpenAI(
-            azure_endpoint=args.api_endpoint,
-            api_key=args.api_key,
-            api_version=args.api_version)
+        if args.api_endpoint.find('azure.com') > 0:
+            self.client = self.create_client_azure()
+        else:
+            self.client = self.create_client_openai()
         # predefined prompts
         self.prompts = {
             "prompt0": "",
@@ -31,6 +30,19 @@ class OpenAIGPT:
             "prompt4": f"Assistant:\nYou serve as a valuable aide, capable of generating clear and persuasive pieces of writing given a certain context. Now, assume the role of an author and strive to finalize this article.\nUser:\nI operate as an entity utilizing GPT as the foundational large language model. I function in the capacity of a writer, authoring articles on a daily basis. Presented below is an example of an article I have crafted.\n",
         }
         self.max_topk = 10
+
+    def create_client_azure(self):
+        from openai import AzureOpenAI
+        return AzureOpenAI(
+            azure_endpoint=self.args.api_endpoint,
+            api_key=self.args.api_key,
+            api_version=self.args.api_version)
+
+    def create_client_openai(self):
+        from openai import OpenAI
+        return OpenAI(
+            base_url=self.args.api_endpoint,
+            api_key=self.args.api_key)
 
     def eval(self, text):
         prompt = self.prompts[self.args.prompt]
@@ -238,7 +250,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_file', type=str, default="./exp_test/results/xsum_gpt-3.5-turbo.babbage-002")
     parser.add_argument('--dataset', type=str, default="xsum")
     parser.add_argument('--dataset_file', type=str, default="./exp_test/data/xsum_gpt-3.5-turbo")
-    parser.add_argument('--scoring_model_name', type=str, default='babbage-002')
+    parser.add_argument('--scoring_model_name', type=str, default='davinci-002')
     parser.add_argument('--api_endpoint', type=str, default='https://xxxx.openai.azure.com/')
     parser.add_argument('--api_key', type=str, default='xxxxxxxx')
     parser.add_argument('--api_version', type=str, default='2023-09-15-preview')
