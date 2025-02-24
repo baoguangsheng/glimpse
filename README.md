@@ -59,7 +59,7 @@ Glimpse criterion is -0.3602, suggesting that the text has a probability of 87% 
 * Setup the environment:
   ```pip install -r requirements.txt```
   
-(Notes: the baseline methods are run on 1 GPU of Tesla A100 with 80G memory, while Glimpse is run on a CPU environment.)
+(Notes: the baseline methods are run on 1 GPU of Tesla A100 with 80G memory, while Glimpse is run on a **CPU** environment.)
 
 ## Workspace
 Following folders are created for our experiments:
