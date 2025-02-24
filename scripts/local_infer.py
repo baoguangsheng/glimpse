@@ -76,7 +76,7 @@ if __name__ == '__main__':
     # use babbage-002 for least cost
     # use davinci-002 for better detection accuracy
     parser.add_argument('--scoring_model_name', type=str, default='davinci-002')
-    parser.add_argument('--api_endpoint', type=str, default='https://api.openai.com/v1')
+    parser.add_argument('--api_base', type=str, default='https://api.openai.com/v1')
     parser.add_argument('--api_key', type=str, default='xxxxxxxx')
     parser.add_argument('--api_version', type=str, default='2023-09-15-preview')
     parser.add_argument('--estimator', type=str, default='geometric', choices=['geometric', 'zipfian', 'mlp'])

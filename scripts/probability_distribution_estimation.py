@@ -17,7 +17,7 @@ from probability_distributions import GeometricDistribution, ZipfianDistribution
 class OpenAIGPT:
     def __init__(self, args):
         self.args = args
-        if args.api_endpoint.find('azure.com') > 0:
+        if args.api_base.find('azure.com') > 0:
             self.client = self.create_client_azure()
         else:
             self.client = self.create_client_openai()
@@ -34,14 +34,14 @@ class OpenAIGPT:
     def create_client_azure(self):
         from openai import AzureOpenAI
         return AzureOpenAI(
-            azure_endpoint=self.args.api_endpoint,
+            azure_endpoint=self.args.api_base,
             api_key=self.args.api_key,
             api_version=self.args.api_version)
 
     def create_client_openai(self):
         from openai import OpenAI
         return OpenAI(
-            base_url=self.args.api_endpoint,
+            base_url=self.args.api_base,
             api_key=self.args.api_key)
 
     def eval(self, text):
@@ -251,7 +251,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str, default="xsum")
     parser.add_argument('--dataset_file', type=str, default="./exp_test/data/xsum_gpt-3.5-turbo")
     parser.add_argument('--scoring_model_name', type=str, default='davinci-002')
-    parser.add_argument('--api_endpoint', type=str, default='https://xxxx.openai.azure.com/')
+    parser.add_argument('--api_base', type=str, default='https://xxxx.openai.azure.com/')
     parser.add_argument('--api_key', type=str, default='xxxxxxxx')
     parser.add_argument('--api_version', type=str, default='2023-09-15-preview')
     parser.add_argument('--estimator', type=str, default='geometric', choices=['geometric', 'zipfian', 'mlp'])
