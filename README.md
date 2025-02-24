@@ -2,7 +2,8 @@
 **This code is for our ICLR 2025 paper "Glimpse: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection"**, where we borrow some code from [Fast-DetectGPT](https://github.com/baoguangsheng/fast-detect-gpt).
 
 [Paper](https://arxiv.org/abs/2412.11506)
-| [Demo](#demo)
+| [LocalDemo](#local-demo)
+| [OnlineDemo](#demo)
 | [OpenReview](https://openreview.net/forum?id=an3fugFA23)
 
 We are working on the demo and will update the link soon.
@@ -39,6 +40,19 @@ We are working on the demo and will update the link soon.
 </table>
 The table shows detection accuracy (measured in AUROC) across five source LLMs, where the methods are evaluated on a diverse dataset Mix3 (a mixture of XSum, Writing, and PubMed) produced by each source model. The baseline Fast-DetectGPT uses an open-source gpt-neo-2.7b model but our Glimpse (Fast-DetectGPT) uses a proprietary gpt-3.5 model. The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
 
+## Local Demo
+Run following command locally for an interactive demo:
+```
+python scripts/local_infer.py  --api_key <openai API key>  --scoring_model_name davinci-002 
+```
+An example looks like
+```
+Please enter your text: (Press Enter twice to start processing)
+工作量和工作强度会根据银行的不同而有所不同。但一般来说，作为业务员需要在工作中需要面对各类客户，以及承担一定的工作压力和业绩指标，因此这个职业确实需要相当的努力和不断的自我提高。
+
+Glimpse criterion is -0.3602, suggesting that the text has a probability of 87% to be machine-generated.
+```
+
 ## Environment
 * Python3.12
 * PyTorch2.3.1
@@ -57,9 +71,10 @@ Following folders are created for our experiments:
 ### Citation
 If you find this work useful, you can cite it with the following BibTex entry:
 
-    @articles{bao2024glimpse,
+    @articles{bao2025glimpse,
       title={Glimpse: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection},
       author={Bao, Guangsheng and Zhao, Yanbin and He, Juncai and Zhang, Yue},
-      year={2024}
+      booktitle={The Thirteenth International Conference on Learning Representations},
+      year={2025}
     }
 
