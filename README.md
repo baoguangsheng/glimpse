@@ -6,7 +6,7 @@
 | [OnlineDemo](https://huggingface.co/spaces/gshbao/glimpse)
 | [OpenReview](https://openreview.net/forum?id=an3fugFA23)
 
-* 🔥 Local and online demo are ready!
+* 🔥 Local and online demos are ready!
 
 ## Brief Intro
 <table class="tg"  style="padding-left: 30px;">
