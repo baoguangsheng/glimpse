@@ -3,10 +3,10 @@
 
 [Paper](https://arxiv.org/abs/2412.11506)
 | [LocalDemo](#local-demo)
-| [OnlineDemo](#demo)
+| [OnlineDemo](https://huggingface.co/spaces/gshbao/glimpse)
 | [OpenReview](https://openreview.net/forum?id=an3fugFA23)
 
-We are working on the demo and will update the link soon.
+* 🔥 Local and online demo are ready!
 
 ## Brief Intro
 <table class="tg"  style="padding-left: 30px;">
