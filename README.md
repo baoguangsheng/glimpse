@@ -55,7 +55,6 @@ Glimpse criterion is -0.3602, suggesting that the text has a probability of 87% 
 
 ## Environment
 * Python3.12
-* PyTorch2.3.1
 * Setup the environment:
   ```pip install -r requirements.txt```
   
