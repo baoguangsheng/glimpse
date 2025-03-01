@@ -38,7 +38,8 @@
     <td class="tg-0pky"><b>0.9537</b><br/>(<b>↑51%</b>)</td>
   </tr>
 </table>
-The table shows detection accuracy (measured in AUROC) across five source LLMs, where the methods are evaluated on a diverse dataset Mix3 (a mixture of XSum, Writing, and PubMed) produced by each source model. The baseline Fast-DetectGPT uses an open-source gpt-neo-2.7b model but our Glimpse (Fast-DetectGPT) uses a proprietary gpt-3.5 model. The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
+
+Glimpse achieves significant improvements in detection accuracy (AUROC) across latest source LLMs. The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
 
 ## Local Demo
 Run following command locally for an interactive demo:
@@ -55,13 +56,12 @@ Glimpse criterion is -0.3602, suggesting that the text has a probability of 87% 
 
 ## Environment
 * Python3.12
-* PyTorch2.3.1
 * Setup the environment:
   ```pip install -r requirements.txt```
   
 (Notes: the baseline methods are run on 1 GPU of Tesla A100 with 80G memory, while Glimpse is run on a **CPU** environment.)
 
-## Workspace
+## Experiments
 Following folders are created for our experiments:
 * ./exp_main -> experiments with five latest LLMs as the source model (main.sh).
 * ./exp_langs -> experiments on six languages (langs.sh).
