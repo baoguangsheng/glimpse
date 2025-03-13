@@ -51,7 +51,7 @@ An example looks like
 Please enter your text: (Press Enter twice to start processing)
 工作量和工作强度会根据银行的不同而有所不同。但一般来说，作为业务员需要在工作中需要面对各类客户，以及承担一定的工作压力和业绩指标，因此这个职业确实需要相当的努力和不断的自我提高。
 
-Glimpse criterion is -0.3602, suggesting that the text has a probability of 87% to be machine-generated.
+Glimpse criterion is -0.3602, suggesting that the text has a probability of 79% to be machine-generated.
 ```
 
 ## Environment
