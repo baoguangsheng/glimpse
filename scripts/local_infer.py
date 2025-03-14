@@ -13,26 +13,37 @@ import json
 from model import load_tokenizer, load_model
 from probability_distributions import GeometricDistribution
 from probability_distribution_estimation import OpenAIGPT, PdeFastDetectGPT
+from scipy.stats import norm
 
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+
+# Considering balanced classification that p(D0) equals to p(D1), we have
+#   p(D1|x) = p(x|D1) / (p(x|D1) + p(x|D0))
+def compute_prob_norm(x, mu0, sigma0, mu1, sigma1):
+    pdf_value0 = norm.pdf(x, loc=mu0, scale=sigma0)
+    pdf_value1 = norm.pdf(x, loc=mu1, scale=sigma1)
+    prob = pdf_value1 / (pdf_value0 + pdf_value1)
+    return prob
 
 class Glimpse:
     def __init__(self, args):
         self.args = args
         self.gpt = OpenAIGPT(args)
         self.criterion_fn = PdeFastDetectGPT(GeometricDistribution(args.top_k, args.rank_size))
-        # pre-calculated parameters by fitting a LogisticRegression on detection results
-        # babbage-002_geometric: k: 1.06, b: 3.39, acc: 0.83
-        # davinci-002_geometric: k: 1.34, b: 2.41, acc: 0.86
-        # gpt-35-turbo-1106_geometric: k: 1.31, b: 3.77, acc: 0.90
-        linear_params = {
-            'babbage-002': (1.06, 3.39),
-            'davinci-002': (1.34, 2.41),
-            'gpt-35-turbo-1106': (1.31, 3.77),
+        # To obtain probability values that are easy for users to understand, we assume normal distributions
+        # of the criteria and statistic the parameters on a group of dev samples. The normal distributions are defined
+        # by mu0 and sigma0 for human texts and by mu1 and sigma1 for AI texts. We set sigma1 = 2 * sigma0 to
+        # make sure of a wider coverage of potential AI texts.
+        # Note: the probability could be high on both left side and right side of Normal(mu0, sigma0).
+        #   babbage-002_geometric: mu0: -5.1874, sigma0: 2.0760, mu1: -1.3959, sigma1: 4.1521, acc:0.8215
+        #   davinci-002_geometric: mu0: -3.8289, sigma0: 2.0131, mu1: -0.0733, sigma1: 4.0261, acc:0.8460
+        #   gpt-35-turbo-1106_geometric: mu0: -5.2040, sigma0: 2.0716, mu1: -0.7821, sigma1: 4.1432, acc:0.8894
+        distrib_params = {
+            'babbage-002_geometric': {'mu0': -5.1874, 'sigma0': 2.0760, 'mu1': -1.3959, 'sigma1': 4.1521},
+            'davinci-002_geometric': {'mu0': -3.8289, 'sigma0': 2.0131, 'mu1': -0.0733, 'sigma1': 4.0261},
+            'gpt-35-turbo-1106_geometric': {'mu0': -5.2040, 'sigma0': 2.0716, 'mu1': -0.7821, 'sigma1': 4.1432},
         }
         key = args.scoring_model_name
-        self.linear_k, self.linear_b = linear_params[key]
+        self.classifier = distrib_params[key]
 
     # compute conditional probability curvature
     def compute_crit(self, text):
@@ -45,7 +56,11 @@ class Glimpse:
     # compute probability
     def compute_prob(self, text):
         crit, ntoken = self.compute_crit(text)
-        prob = sigmoid(self.linear_k * crit + self.linear_b)
+        mu0 = self.classifier['mu0']
+        sigma0 = self.classifier['sigma0']
+        mu1 = self.classifier['mu1']
+        sigma1 = self.classifier['sigma1']
+        prob = compute_prob_norm(crit, mu0, sigma0, mu1, sigma1)
         return prob, crit, ntoken
 
 
