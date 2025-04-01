@@ -3,7 +3,7 @@
 
 [Paper](https://arxiv.org/abs/2412.11506)
 | [LocalDemo](#local-demo)
-| [OnlineDemo](https://huggingface.co/spaces/gshbao/glimpse)
+| [OnlineDemo](https://aidetect.lab.westlake.edu.cn/)
 | [OpenReview](https://openreview.net/forum?id=an3fugFA23)
 
 * 🔥 Local and online demos are ready!
