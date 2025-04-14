@@ -6,7 +6,8 @@
 | [OnlineDemo](https://aidetect.lab.westlake.edu.cn/)
 | [OpenReview](https://openreview.net/forum?id=an3fugFA23)
 
-* 🔥 Local and online demos are ready!
+* 🔥 [4/14/2025] Free [API access](https://aidetect.lab.westlake.edu.cn/#/apidoc) to the detectors is ready! 
+* 🔥 [2/10/2025] Local and online demos are ready!
 
 ## Brief Intro
 <table class="tg"  style="padding-left: 30px;">
