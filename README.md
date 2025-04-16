@@ -13,7 +13,7 @@
 Glimpse serves as a bridge between white-box methods, which rely on local LLMs for scoring, and proprietary LLMs. It estimates full distributions based on partial observations from API-based models. Our empirical analysis demonstrates that detection methods leveraging these estimated distributions achieve detection accuracies comparable to those obtained using real distributions.
 
 The main results are as follows, where Fast-DetectGPT using the proprietary GPT-3.5 achieves significantly better detection accuracies than that using open-source GPT-Neo-2.7B, especially on multiple languages.
-<img src="assets/main-results.png" alt="main results"/>
+<img src="assets/main-results.png" alt="main results" width="640"/>
 
 
 ## Local Demo
