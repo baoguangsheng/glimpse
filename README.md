@@ -1,4 +1,4 @@
-# <img src="doc/glimpse.png" alt="glimpse" width="64"/>Glimpse
+# <img src="assets/glimpse.png" alt="glimpse" width="64"/>Glimpse
 **This code is for our ICLR 2025 paper "Glimpse: Enabling White-Box Methods to Use Proprietary Models for Zero-Shot LLM-Generated Text Detection"**, where we borrow some code from [Fast-DetectGPT](https://github.com/baoguangsheng/fast-detect-gpt).
 
 [Paper](https://arxiv.org/abs/2412.11506)
@@ -10,37 +10,11 @@
 * 🔥 [2/10/2025] Local and online demos are ready!
 
 ## Brief Intro
-<table class="tg"  style="padding-left: 30px;">
-  <tr>
-    <th class="tg-0pky">Method</th>
-    <th class="tg-0pky">ChatGPT</th>
-    <th class="tg-0pky">GPT-4</th>
-    <th class="tg-0pky">Claude-3<br/>Sonnet</th>
-    <th class="tg-0pky">Claude-3<br/>Opus</th>
-    <th class="tg-0pky">Gemini-1.5<br/>Pro</th>
-    <th class="tg-0pky">Avg.</th>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Fast-DetectGPT<br/>(Open-Source: gpt-neo-2.7b)</td>
-    <td class="tg-0pky">0.9487</td>
-    <td class="tg-0pky">0.8999</td>
-    <td class="tg-0pky">0.9260</td>
-    <td class="tg-0pky">0.9468</td>
-    <td class="tg-0pky">0.8072</td>
-    <td class="tg-0pky">0.9057</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Glimpse (Fast-DetectGPT)<br/>(Proprietary: gpt-3.5)</td>
-    <td class="tg-0pky"><b>0.9766</b><br/>(<b>↑54%</b>)</td>
-    <td class="tg-0pky"><b>0.9411</b><br/>(<b>↑41%</b>)</td>
-    <td class="tg-0pky"><b>0.9576</b><br/>(<b>↑43%</b>)</td>
-    <td class="tg-0pky"><b>0.9689</b><br/>(<b>↑42%</b>)</td>
-    <td class="tg-0pky"><b>0.9244</b><br/>(<b>↑61%</b>)</td>
-    <td class="tg-0pky"><b>0.9537</b><br/>(<b>↑51%</b>)</td>
-  </tr>
-</table>
+Glimpse serves as a bridge between white-box methods, which rely on local LLMs for scoring, and proprietary LLMs. It estimates full distributions based on partial observations from API-based models. Our empirical analysis demonstrates that detection methods leveraging these estimated distributions achieve detection accuracies comparable to those obtained using real distributions.
 
-Glimpse achieves significant improvements in detection accuracy (AUROC) across latest source LLMs. The notion "↑" indicates the improvement relative to the remaining space, calculated by "(new - old) / (1.0 - old)".
+The main results are as follows, where Fast-DetectGPT using the proprietary GPT-3.5 achieves significantly better detection accuracies than that using open-source GPT-Neo-2.7B, especially on multiple languages.
+<img src="assets/main-results.png" alt="main results" width="64"/>
+
 
 ## Local Demo
 Run following command locally for an interactive demo:
