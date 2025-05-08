@@ -42,7 +42,7 @@ class Glimpse:
             'davinci-002_geometric': {'mu0': -3.8289, 'sigma0': 2.0131, 'mu1': -0.0733, 'sigma1': 4.0261},
             'gpt-35-turbo-1106_geometric': {'mu0': -5.2040, 'sigma0': 2.0716, 'mu1': -0.7821, 'sigma1': 4.1432},
         }
-        key = args.scoring_model_name
+        key = f'{args.scoring_model_name}_{args.estimator}'
         self.classifier = distrib_params[key]
 
     # compute conditional probability curvature
