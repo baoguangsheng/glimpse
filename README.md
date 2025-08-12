@@ -7,7 +7,7 @@
 | [OpenReview](https://openreview.net/forum?id=an3fugFA23)
 
 * 🔥 [4/14/2025] Free [API access](https://aidetect.lab.westlake.edu.cn/#/apidoc) to the detectors is ready! 
-* 🔥 [2/10/2025] Local and online demos are ready!
+* 🔥 [2/10/2025] Local and online demos are ready! As OpenAI and AzureOpenAI have discontinued the legacy Completion API for GPT-3.5-turbo and GPT-4, our demo is limited to davinci and babbage models.
 
 ## Brief Intro
 Glimpse serves as a bridge between white-box methods, which rely on local LLMs for scoring, and proprietary LLMs. It estimates full distributions based on partial observations from API-based models. Our empirical analysis demonstrates that detection methods leveraging these estimated distributions **achieve detection accuracies comparable to those obtained using real distributions**.
