@@ -6,6 +6,7 @@
 | [OnlineDemo](https://aidetect.lab.westlake.edu.cn/)
 | [OpenReview](https://openreview.net/forum?id=an3fugFA23)
 
+* 9/4/2025: The demo server is facing a hardware problem, and we are actively working on a solution.
 * 🔥 [4/14/2025] Free [API access](https://aidetect.lab.westlake.edu.cn/#/apidoc) to the detectors is ready! 
 * 🔥 [2/10/2025] Local and online demos are ready! As OpenAI and AzureOpenAI have discontinued the legacy Completion API for GPT-3.5-turbo and GPT-4, our demo is limited to davinci and babbage models.
 
